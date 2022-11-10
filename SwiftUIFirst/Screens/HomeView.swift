@@ -19,12 +19,7 @@ struct HomeView: View {
       Spacer()
       
       ZStack {
-          Circle()
-              .stroke(.white.opacity(0.1), lineWidth: 40)
-              .frame(width: 260, height: 260, alignment: .center)
-          Circle()
-              .stroke(.white.opacity(0.1), lineWidth: 80)
-              .frame(width: 260, height: 260, alignment: .center)
+        CircleGroupView(ShapeColor: .gray, ShapeOpacity: 0.1)
         
         Image("meditation")
           .resizable()
