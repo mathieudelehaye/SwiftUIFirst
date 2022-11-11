@@ -11,6 +11,7 @@ struct OnboardingView: View {
   
   @State private var buttonWidth: Double = UIScreen.main.bounds.width - 80
   @State private var buttonOffset: CGFloat = 0
+  @State private var isAnimating: Bool = false
     
   @State private var textTitle: String = "Share."
   @State private var imageOffset: CGSize = .zero
@@ -24,30 +25,33 @@ struct OnboardingView: View {
       
       VStack(spacing: 20) {
       
-      // MARK: - HEADER
-        
-      Spacer()
-        
-      VStack(spacing: 0) {
-        Text(textTitle)
-          .font(.system(size: 60))
-          .fontWeight(.heavy)
-          .foregroundColor(.white)
-          .transition(.opacity)
-          .id(textTitle)
-                  
-        Text("""
-          It's not how much we give but
-          how much love we put into giving.
-          """)
-            .font(.title3)
-            .fontWeight(.light)
+        // MARK: - HEADER
+          
+        Spacer()
+          
+        VStack(spacing: 0) {
+          Text(textTitle)
+            .font(.system(size: 60))
+            .fontWeight(.heavy)
             .foregroundColor(.white)
-            .multilineTextAlignment(.center)
-            .padding(.horizontal, 10)
+            .transition(.opacity)
+            .id(textTitle)
+                    
+          Text("""
+            It's not how much we give but
+            how much love we put into giving.
+            """)
+              .font(.title3)
+              .fontWeight(.light)
+              .foregroundColor(.white)
+              .multilineTextAlignment(.center)
+              .padding(.horizontal, 10)
         } //: HEADER
-        
-        // MARK: - CENTER 
+        .opacity(isAnimating ? 1 : 0)
+        .animation(.easeOut(duration: 0.5), value: isAnimating)
+        .offset(y: isAnimating ? 0 : -40)
+          
+        // MARK: - CENTER
         
         ZStack {
           CircleGroupView(ShapeColor: .white, ShapeOpacity: 0.2)
@@ -55,13 +59,15 @@ struct OnboardingView: View {
           Image("running")
             .resizable()
             .scaledToFit()
+            .opacity(isAnimating ? 1 : 0)
             .offset(x: imageOffset.width * 1.2, y: 0)
+            .animation(.easeOut(duration: 1), value: isAnimating)
         } //: CENTER
         
         Spacer()
-        
+          
         // MARK: - FOOTER
-    
+      
         ZStack {
           // PARTS OF THE CUSTOM BUTTON
           
@@ -129,8 +135,14 @@ struct OnboardingView: View {
         } //: FOOTER
         .frame(width: buttonWidth, height: 80, alignment: .center)
         .padding()
+        .opacity(isAnimating ? 1 : 0)
+        .offset(y: isAnimating ? 0 : 40)
+        .animation(.easeOut(duration: 0.5), value: isAnimating)
       } //: VSTACK
     } //: ZSTACK
+    .onAppear(perform: {
+      isAnimating = true
+    })
   }
 }
 
