@@ -11,8 +11,9 @@ struct OnboardingView: View {
   
   @State private var buttonWidth: Double = UIScreen.main.bounds.width - 80
   @State private var buttonOffset: CGFloat = 0
-  @State private var imageOffset: CGSize = .zero
+    
   @State private var textTitle: String = "Share."
+  @State private var imageOffset: CGSize = .zero
     
   // MARK: - BODY
   
@@ -22,19 +23,20 @@ struct OnboardingView: View {
         .ignoresSafeArea(.all, edges: .all)
       
       VStack(spacing: 20) {
-        // MARK: - HEADER
+      
+      // MARK: - HEADER
         
-        Spacer()
+      Spacer()
         
-        VStack(spacing: 0) {
-          Text(textTitle)
-            .font(.system(size: 60))
-            .fontWeight(.heavy)
-            .foregroundColor(.white)
-            .transition(.opacity)
-            .id(textTitle)
-          
-          Text("""
+      VStack(spacing: 0) {
+        Text(textTitle)
+          .font(.system(size: 60))
+          .fontWeight(.heavy)
+          .foregroundColor(.white)
+          .transition(.opacity)
+          .id(textTitle)
+                  
+        Text("""
           It's not how much we give but
           how much love we put into giving.
           """)
@@ -60,7 +62,7 @@ struct OnboardingView: View {
         
         // MARK: - FOOTER
     
-      ZStack {
+        ZStack {
           // PARTS OF THE CUSTOM BUTTON
           
           // 1. BACKGROUND (STATIC)
@@ -105,10 +107,23 @@ struct OnboardingView: View {
             .foregroundColor(.white)
             .frame(width: 80, height: 80, alignment: .center)
             .offset(x: buttonOffset)
-            .onTapGesture {
-                isOnboardingViewActive = false
-            }
-            
+            .gesture(
+              DragGesture()
+                .onChanged({ gesture in
+                  if gesture.translation.width > 0 && buttonOffset < buttonWidth - 80 {
+                    buttonOffset = gesture.translation.width
+                  }
+                })
+                .onEnded({ _ in
+                  if buttonOffset > buttonWidth / 2 {
+                    buttonOffset = buttonWidth - 80
+                    isOnboardingViewActive = false
+                  } else {
+                    buttonOffset = 0
+                  }
+                    
+                })
+            ) //: GESTURE
             Spacer()
           } //: HSTACK
         } //: FOOTER
